@@ -1,0 +1,248 @@
+<form class="{{cssClass}} flexcol" autocomplete="off">
+
+    {{!-- Spaceship Sheet Header --}}
+    <header class="sheet-header flexrow">
+        <img class="profile" src="{{actor.img}}" title="{{actor.name}}" data-edit="img"/>
+
+        <section class="header-details flexrow">
+            <h1 class="charname">
+                <input name="name" type="text" value="{{actor.name}}" placeholder="{{ localize 'SNS.Name' }}"/>
+            </h1>
+
+            <aside class="header-exp flexcol">
+                <div class="tier">
+                    <label>{{ localize "SNS.Tier" }}</label>
+                    <input name="data.details.tier" type="text" value="{{labels.tier}}" placeholder="1"/>
+                </div>
+                <div class="experience">
+                    <span>{{data.details.xp.value}} XP</span>
+                </div>
+            </aside>
+
+            {{!-- Character Summary --}}
+            <ul class="summary flexrow">
+                <li>
+                    <span>{{lookup config.actorSizes data.traits.size}}</span>
+                </li>
+                <li>
+                    <input type="text" name="data.details.type" value="{{data.details.type}}" placeholder="{{ localize 'SNS.Type' }}"/>
+                </li>
+                <li>
+                    <input type="text" name="data.details.origin" value="{{data.details.origin}}" placeholder="{{ localize 'SNS.Origin' }}"/>
+                </li>
+                <li>
+                    <input type="text" name="data.traits.dimensions" value="{{data.traits.dimensions}}" placeholder="{{localize 'SNS.Dimensions'}}">
+                </li>
+                <li>
+                    <input type="text" name="data.details.source" value="{{data.details.source}}" placeholder="{{ localize 'SNS.Source' }}"/>
+                </li>
+            </ul>
+
+            {{!-- Header Attributes --}}
+            <ul class="attributes flexrow">
+               <li class="attribute health">
+                    <h4 class="attribute-name box-title rollable">{{ localize "SNS.HitPoints" }}</h4>
+                    <div class="attribute-value multiple">
+                        <input name="data.attributes.hp.value" type="text" value="{{data.attributes.hp.value}}" placeholder="10" data-dtype="Number"/>
+                        <span class="sep"> / </span>
+                        <input name="data.attributes.hp.max" type="text" value="{{data.attributes.hp.max}}" placeholder="10" data-dtype="Number"/>
+                    </div>
+                    <footer class="attribute-footer">
+                        <span>{{ localize "SNS.VehicleBodyDisplay" }}</span>
+                        <span>{{numberFormat data.attributes.hp.dt decimals=0 sign=false}}</span>
+                    </footer>
+                </li>
+
+                <li class="attribute">
+                    <h4 class="attribute-name box-title">{{ localize "SNS.ArmorClass" }}</h4>
+                    <div class="attribute-value">
+                        <input name="data.attributes.ac.value" type="number" value="{{data.attributes.ac.value}}" placeholder="10"/>
+                    </div>
+                    <footer class="attribute-footer">
+                        <span>{{ localize "SNS.Proficiency" }}</span>
+                        <span>{{numberFormat data.attributes.prof decimals=0 sign=true}}</span>
+                    </footer>
+                </li>
+
+                <li class="attribute movement">
+                    <h4 class="attribute-name box-title">
+                        {{ localize "SNS.Movement" }}
+                        <a class="config-button" data-action="movement" title="{{localize 'SNS.MovementConfig'}}"><i class="fas fa-cog"></i></a>
+                    </h4>
+                    <div class="attribute-value">
+                        <span>{{movement.primary}}</span>
+                    </div>
+                    <footer class="attribute-footer">
+                        <span>{{movement.special}}</span>
+                    </footer>
+                </li>
+            </ul>
+        </section>
+    </header>
+
+    {{!-- Spaceship Sheet Navigation --}}
+    <nav class="sheet-navigation tabs" data-group="primary">
+        <a class="item active" data-tab="attributes">{{ localize "SNS.Attributes" }}</a>
+        <a class="item" data-tab="features">{{ localize "SNS.Features" }}</a>
+        <a class="item" data-tab="spellbook">{{ localize "SNS.Spellbook" }}</a>
+        <a class="item" data-tab="effects">{{ localize "SNS.Effects" }}</a>
+        <a class="item" data-tab="biography">{{ localize "SNS.Description" }}</a>
+    </nav>
+
+    {{!-- Spaceship Sheet Body --}}
+    <section class="sheet-body">
+        <div class="tab attributes flexrow" data-group="primary" data-tab="attributes">
+
+            {{!-- Ability Scores --}}
+            <ul class="ability-scores flexrow">
+            {{#each data.abilities as |ability id|}}
+                <li class="ability {{#if ability.proficient}}proficient{{/if}}" data-ability="{{id}}">
+                    <h4 class="ability-name box-title rollable">{{ability.label}}</h4>
+                    <input class="ability-score" name="data.abilities.{{id}}.value" type="number" value="{{ability.value}}" placeholder="10"/>
+                    <div class="ability-modifiers flexrow">
+                        <span class="ability-mod" title="Modifier">{{numberFormat ability.mod decimals=0 sign=true}}</span>
+                        <input type="hidden" name="data.abilities.{{id}}.proficient" value="{{ability.proficient}}" data-dtype="Number"/>
+                        <a class="proficiency-toggle ability-proficiency" title="{{ localize 'SNS.Proficiency' }}">{{{ability.icon}}}</a>
+                        <span class="ability-save" title="Saving Throw">{{numberFormat ability.save decimals=0 sign=true}}</span>
+                    </div>
+                </li>
+            {{/each}}
+            </ul>
+
+            <ul class="skills-list-ship">
+
+            {{!-- Skills --}}
+            {{#each data.skills as |skill s|}}
+                <li class="skill flexrow {{#if skill.value}}proficient{{/if}}" data-skill="{{s}}">
+                    <input type="hidden" name="data.skills.{{s}}.value" value="{{skill.value}}" data-dtype="Number"/>
+                    <a class="proficiency-toggle skill-proficiency" title="{{skill.hover}}">{{{skill.icon}}}</a>
+                    <h4 class="skill-name rollable">{{skill.label}}</h4>
+                    <span class="skill-ability">{{skill.ability}}</span>
+                    <span class="skill-mod">{{numberFormat skill.total decimals=0 sign=true}}</span>
+                    <span class="skill-passive">({{skill.passive}})</span>
+                </li>
+            {{/each}}
+
+                {{!-- Ship Actions and Details--}}
+                <div class="counters">
+                    <div class="counter flexrow crew">
+                        <h4>{{localize 'SNS.Crew'}}</h4>
+                        <div class="counter-value">
+                            <input type="text" placeholder="1"
+                                   name="data.attributes.capacity.crew"
+                                   value="{{data.attributes.capacity.crew}}">
+                        </div>
+                    </div>
+                    <div class="counter flexrow creature-capacity">
+                        <h4>{{localize 'SNS.Passengers'}}</h4>
+                        <div class="counter-value">
+                            <input type="text" placeholder="&mdash;"
+                                   name="data.attributes.capacity.passengers"
+                                   value="{{data.attributes.capacity.passengers}}">
+                        </div>
+                    </div>
+		   <div class="counter flexrow creature-body">
+                        <h4>{{localize 'SNS.VehicleBody'}}</h4>
+                        <div class="counter-value">
+                            <input type="text" placeholder="0"
+                                   name="data.attributes.hp.dt"
+                                   value="{{data.attributes.hp.dt}}">
+                        </div>
+                    </div>
+                    <div class="counter flexrow handling">
+                        <h4>{{localize 'SNS.VehicleHandling'}}</h4>
+                        <div class="counter-value">
+                            <input type="text" placeholder="0"
+                                   name="data.attributes.handling"
+                                   value="{{data.attributes.handling}}">
+                        </div>
+                    </div>
+                    <div class="counter flexrow developmentSlots">
+                        <h4>{{localize 'SNS.VehicleDevelopmentSlots'}}</h4>
+                        <div class="counter-value">
+                            <input type="text" placeholder="0"
+                                   name="data.attributes.developmentSlots"
+                                   value="{{data.attributes.developmentSlots}}">
+                        </div>
+                    </div>
+                    <div class="counter flexrow weaponSlots">
+                        <h4>{{localize 'SNS.VehicleWeaponSlots'}}</h4>
+                        <div class="counter-value">
+                            <input type="text" placeholder="0"
+                                   name="data.attributes.weaponSlots"
+                                   value="{{data.attributes.weaponSlots}}">
+                        </div>
+                    </div>
+                    <div class="counter flexrow turnValue">
+                        <h4>{{localize 'SNS.VehicleTurnValue'}}</h4>
+                        <div class="counter-value">
+                            <input type="text" placeholder="&mdash;"
+                                   name="data.attributes.turnValue"
+                                   value="{{data.attributes.turnValue}}">
+                        </div>
+                    </div>
+                    <div class="counter flexrow vehicleCharge">
+                        <h4>{{localize 'SNS.VehicleCharge'}}</h4>
+                        <div class="counter-value">
+                            <input type="text" placeholder="&mdash;"
+                                   name="data.attributes.vehicleCharge"
+                                   value="{{data.attributes.vehicleCharge}}">
+                        </div>
+                    </div>
+                    <div class="counter flexrow ship-actions">
+                        <h4>{{ localize "SNS.ShipAct" }}</h4>
+                        <div class="counter-value">
+                            <input name="data.resources.shipact.value" type="number" value="{{data.resources.shipact.value}}" placeholder="0"/>
+                            <span class="sep">/</span>
+                            <input name="data.resources.shipact.max" type="number" value="{{data.resources.shipact.max}}" placeholder="0"/>
+                        </div>
+                    </div>
+                </div>
+            </ul>
+
+            <section class="center-pane flexcol">
+
+                {{!-- Body Attributes --}}
+                <ul class="attributes flexrow">
+                    {{#each resources as |res|}}
+                    <li class="attribute resource">
+                        <h4 class="attribute-name box-title">
+                            <input name="data.resources.{{res.name}}.label" type="text" value="{{res.label}}"
+                                   placeholder="{{res.placeholder}}" />
+                        </h4>
+                        <div class="attribute-value">
+
+                            <input name="data.resources.{{res.name}}.value" type="number" value="{{res.value}}" placeholder="0"/>
+                            <span class="sep"> / </span>
+                            <input name="data.resources.{{res.name}}.max" type="number" value="{{res.max}}" placeholder="0"/>
+                        </div>
+                    </li>
+                    {{/each}}
+                </ul>
+
+            {{!-- Traits --}}
+            {{> "systems/sns/templates/actors/parts/ship-actor-traits.html"}}
+            </section>
+        </div>
+
+        {{!-- Features Tab --}}
+        <div class="tab features flexcol" data-group="primary" data-tab="features">
+            {{> "systems/sns/templates/actors/parts/actor-features.html" sections=features}}
+        </div>
+
+        {{!-- Spellbook Tab --}}
+        <div class="tab spellbook flexcol" data-group="primary" data-tab="spellbook">
+            {{> "systems/sns/templates/actors/parts/actor-spellbook.html"}}
+        </div>
+
+        {{!-- Effects Tab --}}
+        <div class="tab effects flexcol" data-group="primary" data-tab="effects">
+            {{> "systems/sns/templates/actors/parts/active-effects.html"}}
+        </div>
+
+        {{!-- Biography Tab --}}
+        <div class="tab biography flexcol" data-group="primary" data-tab="biography">
+            {{editor content=data.details.biography.value target="data.details.biography.value" button=true owner=owner editable=editable}}
+        </div>
+    </section>
+</form>

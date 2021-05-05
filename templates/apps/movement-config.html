@@ -1,0 +1,46 @@
+<form autocomplete="off">
+    <p class="notes">{{localize "SNS.MovementConfigHint"}}</p>
+    <div class="form-group">
+        <label>{{localize "SNS.MovementWalk"}}</label>
+        <input name="data.attributes.movement.walk" type="number" step="0.1" value="{{movement.walk}}"/>
+    </div>
+    <div class="form-group">
+        <label>{{localize "SNS.MovementBurrow"}}</label>
+        <input name="data.attributes.movement.burrow" type="number" step="0.1" value="{{movement.burrow}}"/>
+    </div>
+    <div class="form-group">
+        <label>{{localize "SNS.MovementClimb"}}</label>
+        <input name="data.attributes.movement.climb" type="number" step="0.1" value="{{movement.climb}}"/>
+    </div>
+    <div class="form-group">
+        <label>{{localize "SNS.MovementFly"}}</label>
+        <input name="data.attributes.movement.fly" type="number" step="0.1" value="{{movement.fly}}"/>
+    </div>
+    <div class="form-group">
+        <label>{{localize "SNS.MovementSwim"}}</label>
+        <input name="data.attributes.movement.swim" type="number" step="0.1" value="{{movement.swim}}"/>
+    </div>
+    <div class="form-group">
+        <label>{{localize "SNS.MovementZeroG"}}</label>
+        <input name="data.attributes.movement.zerog" type="number" step="0.1" value="{{movement.zerog}}"/>
+    </div>
+    <div class="form-group">
+        <label>{{localize "SNS.MovementMaxSpeed"}}</label>
+        <input name="data.attributes.movement.maxspeed" type="number" step="0.1" value="{{movement.maxspeed}}"/>
+    </div>
+    <div class="form-group">
+        <label>{{localize "SNS.MovementMPH"}}</label>
+        <input name="data.attributes.movement.mph" type="number" step="0.1" value="{{movement.mph}}"/>
+    </div>
+    <div class="form-group">
+        <label>{{localize "SNS.MovementUnits"}}</label>
+        <select name="data.attributes.movement.units">
+            {{selectOptions units selected=movement.units}}
+        </select>
+    </div>
+    <div class="form-group">
+        <label>{{localize "SNS.MovementHover"}}</label>
+        <input name="data.attributes.movement.hover" type="checkbox" {{checked movement.hover}}/>
+    </div>
+    <button type="submit" name="submit" value="1"><i class="far fa-save"></i> {{ localize "Submit"}}</button>
+</form>

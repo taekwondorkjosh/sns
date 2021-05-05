@@ -1,0 +1,147 @@
+<form class="{{cssClass}} flexcol" autocomplete="off">
+
+    {{!-- Item Sheet Header --}}
+    <header class="sheet-header flexrow">
+        <img class="profile" src="{{item.img}}" title="{{item.name}}" data-edit="img"/>
+
+        <div class="header-details flexrow">
+            <h1 class="charname">
+                <input name="name" type="text" value="{{item.name}}" placeholder="{{ localize 'SNS.ItemName' }}"/>
+            </h1>
+
+            <div class="item-subtitle">
+                <h4 class="item-type">{{itemType}}</h4>
+                <span class="item-status">{{itemStatus}}</span>
+            </div>
+
+            <ul class="summary flexrow">
+                <li>
+                    {{lookup config.weaponTypes data.weaponType }}
+                </li>
+                <li>
+                    <input type="text" name="data.rarity" value="{{data.rarity}}" placeholder="{{ localize 'SNS.Rarity' }}"/>
+                </li>
+                <li>
+                    <input type="text" name="data.source" value="{{data.source}}" placeholder="{{ localize 'SNS.Source' }}"/>
+                </li>
+            </ul>
+        </div>
+    </header>
+
+    {{!-- Item Sheet Navigation --}}
+    <nav class="sheet-navigation tabs" data-group="primary">
+        <a class="item active" data-tab="description">{{ localize "SNS.Description" }}</a>
+        <a class="item" data-tab="details">{{ localize "SNS.Details" }}</a>
+        <a class="item" data-tab="effects">{{ localize "SNS.Effects" }}</a>
+    </nav>
+
+    {{!-- Item Sheet Body --}}
+    <section class="sheet-body">
+
+        {{!-- Description Tab --}}
+        {{> "systems/sns/templates/items/parts/item-description.html"}}
+
+        {{!-- Details Tab --}}
+        <div class="tab details" data-group="primary" data-tab="details">
+            <h3 class="form-header">{{ localize "SNS.ItemWeaponDetails" }}</h3>
+
+            {{!-- Weapon Type --}}
+            <div class="form-group">
+                <label>{{ localize "SNS.ItemWeaponType" }}</label>
+                <select name="data.weaponType">
+                    {{#select data.weaponType}}
+                    {{#each config.weaponTypes as |name type|}}
+                    <option value="{{type}}">{{name}}</option>
+                    {{/each}}
+                    {{/select}}
+                </select>
+            </div>
+
+            {{!-- Weapon Bulky --}}
+            <div class="form-group">
+                <label>{{ localize "SNS.WeaponBulky" }}</label>
+                <div class="form-fields">
+                   <input type="text" name="data.weaponBulky.value" value="{{data.weaponBulky.value}}" data-dtype="Number"/>
+                </div>
+            </div>
+
+            {{!-- Weapon Reload --}}
+            <div class="form-group">
+                <label>{{ localize "SNS.WeaponReload" }}</label>
+                <div class="form-fields">
+                   <input type="text" name="data.weaponReload.value" value="{{data.weaponReload.value}}" data-dtype="Number"/>
+                </div>
+            </div>
+
+            {{!-- Weapon Recharge --}}
+            <div class="form-group">
+                <label>{{ localize "SNS.WeaponRecharge" }}</label>
+                <div class="form-fields">
+                   <input type="text" name="data.weaponRecharge.value" value="{{data.weaponRecharge.value}}" data-dtype="Number"/>
+                </div>
+            </div>
+
+            {{#unless isMountable}}
+            <div class="form-group">
+                <label>{{localize "SNS.Attunement"}}</label>
+                <select name="data.attunement" data-dtype="Number">
+                    {{selectOptions config.attunements selected=data.attunement localize=true}}
+                </select>
+            </div>
+
+            {{!-- Weapon Status --}}
+            <div class="form-group stacked">
+                <label>{{ localize "SNS.ItemWeaponStatus" }}</label>
+                <div class="form-fields">
+                    <label class="checkbox">
+                        <input type="checkbox" name="data.proficient" {{checked data.proficient}}/> {{ localize "SNS.Proficient" }}
+                    </label>
+                    <label class="checkbox">
+                        <input type="checkbox" name="data.equipped" {{checked data.equipped}}/> {{ localize "SNS.Equipped" }}
+                    </label>
+                    <label class="checkbox">
+                        <input type="checkbox" name="data.identified" {{checked data.identified}}/> {{ localize "SNS.Identified" }}
+                    </label>
+                </div>
+            </div>
+            {{/unless}}
+
+            {{!-- Weapon Properties --}}
+            <div class="form-group stacked weapon-properties">
+                <label>{{ localize "SNS.ItemWeaponProperties" }}</label>
+                {{#each config.weaponProperties as |name prop|}}
+                <label class="checkbox">
+                    <input type="checkbox" name="data.properties.{{prop}}" {{checked (lookup ../data.properties prop)}}/> {{ name }}
+                </label>
+                {{/each}}
+            </div>
+
+            {{#if isMountable}}
+            <div class="form-group">
+                <label>{{localize 'SNS.ArmorClass'}}</label>
+                <div class="form-fields">
+                    <input type="text" name="data.armor.value" value="{{data.armor.value}}"
+                           data-dtype="Number">
+                </div>
+            </div>
+
+            {{> 'systems/sns/templates/items/parts/item-mountable.html'}}
+            {{/if}}
+
+            <h3 class="form-header">{{ localize "SNS.ItemWeaponUsage" }}</h3>
+
+            {{!-- Item Activation Template --}}
+            {{> "systems/sns/templates/items/parts/item-activation.html"}}
+
+            <h3 class="form-header">{{ localize "SNS.ItemWeaponAttack" }}</h3>
+
+            {{!-- Item Action Template --}}
+            {{> "systems/sns/templates/items/parts/item-action.html"}}
+        </div>
+
+        {{!-- Effects Tab --}}
+        <div class="tab effects flexcol" data-group="primary" data-tab="effects">
+            {{> "systems/sns/templates/actors/parts/active-effects.html"}}
+        </div>
+    </section>
+</form>

@@ -1,0 +1,191 @@
+<form class="{{cssClass}} flexcol" autocomplete="off">
+
+    {{!-- Item Sheet Header --}}
+    <header class="sheet-header flexrow">
+        <img class="profile" src="{{item.img}}" title="{{item.name}}" data-edit="img"/>
+
+        <div class="header-details flexrow">
+            <h1 class="charname">
+                <input name="name" type="text" value="{{item.name}}" placeholder="{{ localize 'SNS.ItemName' }}"/>
+            </h1>
+
+            <div class="item-subtitle">
+                <h4 class="item-type">{{itemType}}</h4>
+                <span class="item-status">{{itemStatus}}</span>
+            </div>
+
+            <ul class="summary flexrow">
+                <li>
+                    {{lookup config.equipmentTypes data.armor.type }}
+                </li>
+                <li>
+                    <input type="text" name="data.rarity" value="{{data.rarity}}" placeholder="{{ localize 'SNS.Rarity' }}"/>
+                </li>
+                <li>
+                    <input type="text" name="data.source" value="{{data.source}}" placeholder="{{ localize 'SNS.Source' }}"/>
+                </li>
+            </ul>
+        </div>
+    </header>
+
+    {{!-- Item Sheet Navigation --}}
+    <nav class="sheet-navigation tabs" data-group="primary">
+        <a class="item active" data-tab="description">{{ localize "SNS.Description" }}</a>
+        <a class="item" data-tab="details">{{ localize "SNS.Details" }}</a>
+        <a class="item" data-tab="effects">{{ localize "SNS.Effects" }}</a>
+    </nav>
+
+    {{!-- Item Sheet Body --}}
+    <section class="sheet-body">
+
+        {{!-- Description Tab --}}
+        {{> "systems/sns/templates/items/parts/item-description.html"}}
+
+        {{!-- Details Tab --}}
+        <div class="tab details" data-group="primary" data-tab="details">
+            <h3 class="form-header">{{ localize "SNS.ItemEquipmentDetails" }}</h3>
+
+            {{!-- Equipment Type --}}
+            <div class="form-group">
+                <label>{{ localize "SNS.ItemEquipmentType" }}</label>
+                <select name="data.armor.type">
+                    {{#select data.armor.type}}
+                    <option value=""></option>
+                    {{#each config.equipmentTypes as |name type|}}
+                    <option value="{{type}}">{{localize name}}</option>
+                    {{/each}}
+                    {{/select}}
+                </select>
+            </div>
+
+            {{#unless isMountable}}
+            <div class="form-group">
+                <label>{{localize "SNS.Attunement"}}</label>
+                <select name="data.attunement" data-dtype="Number">
+                    {{selectOptions config.attunements selected=data.attunement localize=true}}
+                </select>
+            </div>
+
+            {{!-- Equipment Status --}}
+            <div class="form-group stacked">
+                <label>{{ localize "SNS.ItemEquipmentStatus" }}</label>
+                <label class="checkbox">
+                    <input type="checkbox" name="data.proficient" {{checked data.proficient}}/> {{ localize "SNS.Proficient" }}
+                </label>
+                <label class="checkbox">
+                    <input type="checkbox" name="data.equipped" {{checked data.equipped}}/> {{ localize "SNS.Equipped" }}
+                </label>
+                <label class="checkbox">
+                    <input type="checkbox" name="data.identified" {{checked data.identified}}/> {{ localize "SNS.Identified" }}
+                </label>
+            </div>
+            {{/unless}}
+
+            {{!-- Armor Class --}}
+            <div class="form-group">
+                <label>{{ localize "SNS.ArmorClass" }}</label>
+                <div class="form-fields">
+                   <input type="text" name="data.armor.value" value="{{data.armor.value}}" data-dtype="Number"/>
+                </div>
+            </div>
+
+            {{!-- Modification/Software Slots --}}
+            <div class="form-group">
+                <label>{{ localize "SNS.ModSlots" }}</label>
+                <div class="form-fields">
+                   <input type="text" name="data.modSlots.value" value="{{data.modSlots.value}}" data-dtype="Number"/>
+                </div>
+            </div>
+
+            {{#unless isMountable}}
+
+            {{!-- Dexterity Modifier --}}
+            <div class="form-group">
+                <label>{{ localize "SNS.ItemEquipmentDexMod" }}</label>
+                <div class="form-fields">
+                   <input type="text" name="data.armor.dex" value="{{data.armor.dex}}" data-dtype="Number" placeholder="{{ localize 'SNS.Unlimited' }}"/>
+                </div>
+            </div>
+
+            {{!-- Required Strength --}}
+            <div class="form-group">
+                <label>{{ localize "SNS.ItemRequiredStr" }}</label>
+                <div class="form-fields">
+                   <input type="text" name="data.propertiesofitems.reqstrength" value="{{data.propertiesofitems.reqstrength}}" data-dtype="Number" placeholder="{{ localize 'SNS.None' }}"/>
+                </div>
+            </div>
+
+            {{!-- Activated --}}
+            <div class="form-group">
+                <label>{{ localize "SNS.ItemEquipmentActivated" }}</label>
+                <input type="checkbox" name="data.propertiesofitems.activated" value="0" {{checked data.propertiesofitems.activated}}/>
+            </div>
+
+            {{!-- Str/Dex Disadvantage --}}
+            <div class="form-group">
+                <label>{{ localize "SNS.ItemEquipmentStrDexDisav" }}</label>
+                <input type="checkbox" name="data.propertiesofitems.strdexdis" value="0" {{checked data.propertiesofitems.strdexdis}}/>
+            </div>
+
+            {{!-- Network Enabled --}}
+            <div class="form-group">
+                <label>{{ localize "SNS.ItemEquipmentNetworkEnabled" }}</label>
+                <input type="checkbox" name="data.propertiesofitems.networkenabled" value="0" {{checked data.propertiesofitems.networkenabled}}/>
+            </div>
+
+            {{!-- Resist Ballistic--}}
+            <div class="form-group">
+                <label>{{ localize "SNS.ItemEquipmentResistBallistic" }}</label>
+                <input type="checkbox" name="data.propertiesofitems.resistballistic" value="0" {{checked data.propertiesofitems.resistballistic}}/>
+            </div>
+
+            {{!-- Spaceable --}}
+            <div class="form-group">
+                <label>{{ localize "SNS.ItemEquipmentSpaceable" }}</label>
+                <input type="checkbox" name="data.propertiesofitems.spaceable" value="0" {{checked data.propertiesofitems.spaceable}}/>
+            </div>
+
+            {{!-- Thrusters --}}
+            <div class="form-group">
+                <label>{{ localize "SNS.ItemEquipmentThrusters" }}</label>
+                <input type="checkbox" name="data.propertiesofitems.thrusters" value="0" {{checked data.propertiesofitems.thrusters}}/>
+            </div>
+
+            {{!-- Provides Cover? --}}
+            <div class="form-group">
+                <label>{{ localize "SNS.ItemEquipmentCover" }}</label>
+                <input type="checkbox" name="data.propertiesofitems.cover" value="0" {{checked data.propertiesofitems.cover}}/>
+            </div>
+            {{/unless}}
+
+            {{#if isMountable}}
+            {{> 'systems/sns/templates/items/parts/item-mountable.html'}}
+            <div class="form-group">
+                <label>{{localize 'SNS.Speed'}}</label>
+                <div class="form-fields">
+                    <input type="text" name="data.speed.value" value="{{data.speed.value}}"
+                           placeholder="0" data-dtype="Number">
+                    <span class="sep">{{localize 'SNS.FeetAbbr'}}</span>
+                    <input type="text" name="data.speed.conditions"
+                           value="{{data.speed.conditions}}">
+                </div>
+            </div>
+            {{/if}}
+
+            <h3 class="form-header">{{ localize "SNS.ItemEquipmentUsage" }}</h3>
+
+            {{!-- Item Activation Template --}}
+            {{> "systems/sns/templates/items/parts/item-activation.html"}}
+
+            <h3 class="form-header">{{ localize "SNS.ItemEquipmentAction" }}</h3>
+
+            {{!-- Item Action Template --}}
+            {{> "systems/sns/templates/items/parts/item-action.html"}}
+        </div>
+
+        {{!-- Effects Tab --}}
+        <div class="tab effects flexcol" data-group="primary" data-tab="effects">
+            {{> "systems/sns/templates/actors/parts/active-effects.html"}}
+        </div>
+    </section>
+</form>
