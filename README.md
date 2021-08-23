@@ -1,5 +1,5 @@
 # sns
-a foundry System for the Spaceships and Starwyrms dnd5e supplement
+a foundry System for the Spaceships and Starwyrms dnd5e supplement. This is designed for use with the 0.7.9 version of foundry! It will not work properly for other versions. An updated version is located at
 
 To use this, download the contents in the repository and add them to a folder called "sns" in the "Systems" folder of your foundry AppData. It should work pretty much exactly as needed. 
 
